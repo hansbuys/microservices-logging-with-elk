@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-import { InversifyExpressServer } from 'inversify-express-utils';
-import { json } from 'body-parser';
-import { Container } from 'inversify';
-import { Application } from 'express';
-import { Server } from 'http';
+import { json } from "body-parser";
 import * as Logger from "bunyan";
+import { Application } from "express";
+import { Server } from "http";
+import { Container } from "inversify";
+import { InversifyExpressServer } from "inversify-express-utils";
+import "reflect-metadata";
 import { LogFactory } from "./logfactory";
 
 import "./echo";
@@ -25,7 +25,7 @@ export class EchoServer {
         this.container = new Container();
         this.container.bind(LogFactory).toConstantValue(log);
 
-        let server = new InversifyExpressServer(this.container);
+        const server = new InversifyExpressServer(this.container);
 
         server.setConfig((app: Application) => {
             app.use(json());
