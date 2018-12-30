@@ -3,12 +3,12 @@ import * as Logger from "bunyan"
 
 export class LogFactory {
 
-    private logLevel = process.env.LOG_LEVEL as LogLevel || "debug";
-    private namespace: string = "Validation.Echo";
-    private outputToFile: string | false;
-    private outputToConsole: boolean = true;
+    private readonly logLevel = process.env.LOG_LEVEL as LogLevel || "debug";
+    private readonly namespace: string = "Validation.Echo";
+    private readonly outputToFile: string | false;
+    private readonly outputToConsole: boolean = true;
 
-    constructor(toFile?: string | false, toConsole: boolean = true) {
+    public constructor(toFile?: string | false, toConsole: boolean = true) {
         this.outputToFile = toFile === undefined ? `/var/log/service.landscape/${this.namespace.toLowerCase()}.json` : toFile;
 
         this.outputToConsole = toConsole;

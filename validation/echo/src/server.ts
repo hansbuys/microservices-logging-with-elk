@@ -5,20 +5,20 @@ import { Container } from 'inversify';
 import { Application } from 'express';
 import { Server } from 'http';
 import * as Logger from "bunyan"
-import { LogFactory } from "./logging"
+import { LogFactory } from "./logfactory"
 
 import "./echo"
 
 export class EchoServer {
 
-    readonly port: number;
-    readonly log: Logger;
-    readonly container: Container
+    private readonly port: number;
+    private readonly log: Logger;
+    private readonly container: Container
 
-    serverInstance: Application
-    listener: Server | undefined;
+    private serverInstance: Application
+    private listener: Server | undefined;
 
-    constructor(port: number, log: LogFactory) {
+    public constructor(port: number, log: LogFactory) {
         this.port = port
         this.log = log.createLog("EchoServer")
 
@@ -33,13 +33,13 @@ export class EchoServer {
         this.serverInstance = server.build();
     }
 
-    start(): void {
+    public start(): void {
         this.listener = this.serverInstance.listen(this.port, () => {
             this.log.info(`Server started on http://localhost:${this.port}`);
         });
     }
 
-    stop(): any {
+    public stop(): any {
         if (this.listener !== undefined) {
             this.log.info("Server stopped.");
             this.listener.close();

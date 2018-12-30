@@ -2,7 +2,7 @@ import {} from "mocha"
 import {expect} from "chai"
 import * as request from "request-promise-native"
 import { EchoServer } from "../src/server";
-import { LogFactory } from "../src/logging";
+import { LogFactory } from "../src/logfactory";
 
 const port = 3000;
 const url = `http://localhost:${port}`
