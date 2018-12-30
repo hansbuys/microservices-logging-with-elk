@@ -4,14 +4,6 @@ import { injectable } from "inversify";
 
 type Newable<T> = new (...args: any[]) => T;
 
-declare global {
-    namespace Express {
-        interface Request {
-             log: Logger;
-        }
-    }
-}
-
 @injectable()
 export class LogFactory {
 
