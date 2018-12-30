@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently --kill-others \"tsc -w\" \"nodemon dist/index.js\"",
-    "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
+    "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
+    "lint": "tslint src/**/*.ts"
   },
   "author": "",
   "license": "ISC",
