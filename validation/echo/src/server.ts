@@ -4,7 +4,6 @@ import { Application } from "express";
 import { Server } from "http";
 import { Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
-import "reflect-metadata";
 import { LogFactory } from "./logfactory";
 
 import "./echo";

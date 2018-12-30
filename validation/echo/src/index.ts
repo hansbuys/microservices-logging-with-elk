@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { LogFactory } from "./logfactory";
 import { EchoServer } from "./server";
 

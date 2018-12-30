@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import {} from "mocha";
+import "reflect-metadata";
 import * as request from "request-promise-native";
 import { LogFactory } from "../src/logfactory";
 import { EchoServer } from "../src/server";
