@@ -1,6 +1,12 @@
 import { LogLevel, createLogger, stdSerializers, Stream } from "bunyan";
-import * as Logger from "bunyan"
+import * as Logger from "bunyan";
+import { injectable } from "inversify";
 
+interface Newable<T> {
+    new(...args: any[]): T;
+}
+
+@injectable()
 export class LogFactory {
 
     private readonly logLevel = process.env.LOG_LEVEL as LogLevel || "debug";
@@ -14,8 +20,8 @@ export class LogFactory {
         this.outputToConsole = toConsole;
     }
 
-    public createLog(name: String): Logger {
-        let loggerName = `${this.namespace}.${name}`;
+    public createLog<T>(t: Newable<T>): Logger {
+        let loggerName = `${this.namespace}.${t.name}`;
 
         const logger = createLogger({
             name: loggerName,

@@ -4,8 +4,8 @@ import { json } from 'body-parser';
 import { Container } from 'inversify';
 import { Application } from 'express';
 import { Server } from 'http';
-import * as Logger from "bunyan"
-import { LogFactory } from "./logfactory"
+import * as Logger from "bunyan";
+import { LogFactory } from "./logfactory";
 
 import "./echo"
 
@@ -13,16 +13,17 @@ export class EchoServer {
 
     private readonly port: number;
     private readonly log: Logger;
-    private readonly container: Container
+    private readonly container: Container;
+    private readonly serverInstance: Application;
 
-    private serverInstance: Application
-    private listener: Server | undefined;
+    private listener?: Server;
 
     public constructor(port: number, log: LogFactory) {
         this.port = port
-        this.log = log.createLog("EchoServer")
+        this.log = log.createLog(EchoServer)
 
         this.container = new Container
+        this.container.bind(LogFactory).toConstantValue(log);
 
         let server = new InversifyExpressServer(this.container);
 
@@ -40,7 +41,7 @@ export class EchoServer {
     }
 
     public stop(): any {
-        if (this.listener !== undefined) {
+        if (this.listener) {
             this.log.info("Server stopped.");
             this.listener.close();
         }
