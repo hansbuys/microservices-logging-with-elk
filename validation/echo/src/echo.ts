@@ -1,7 +1,7 @@
-import { controller, httpGet } from "inversify-express-utils";
-import { inject } from "inversify";
-import { LogFactory } from "./logfactory";
 import * as Logger from "bunyan";
+import { inject } from "inversify";
+import { controller, httpGet } from "inversify-express-utils";
+import { LogFactory } from "./logfactory";
 
 @controller("/")
 export class EchoController {
@@ -13,8 +13,8 @@ export class EchoController {
      }
 
     @httpGet("/")
-    public async index(): Promise<String> {
+    public async index(): Promise<string> {
         this.log.debug("Saying 'hello'.");
-        return "hello"
+        return "hello";
     }
 }

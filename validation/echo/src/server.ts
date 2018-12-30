@@ -7,7 +7,7 @@ import { Server } from 'http';
 import * as Logger from "bunyan";
 import { LogFactory } from "./logfactory";
 
-import "./echo"
+import "./echo";
 
 export class EchoServer {
 
@@ -19,10 +19,10 @@ export class EchoServer {
     private listener?: Server;
 
     public constructor(port: number, log: LogFactory) {
-        this.port = port
-        this.log = log.createLog(EchoServer)
+        this.port = port;
+        this.log = log.createLog(EchoServer);
 
-        this.container = new Container
+        this.container = new Container();
         this.container.bind(LogFactory).toConstantValue(log);
 
         let server = new InversifyExpressServer(this.container);

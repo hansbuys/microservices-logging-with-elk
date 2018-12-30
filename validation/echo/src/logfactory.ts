@@ -1,10 +1,8 @@
-import { LogLevel, createLogger, stdSerializers, Stream } from "bunyan";
+import { createLogger, LogLevel, stdSerializers, Stream } from "bunyan";
 import * as Logger from "bunyan";
 import { injectable } from "inversify";
 
-interface Newable<T> {
-    new(...args: any[]): T;
-}
+type Newable<T> = new (...args: any[]) => T;
 
 @injectable()
 export class LogFactory {
@@ -15,21 +13,23 @@ export class LogFactory {
     private readonly outputToConsole: boolean = true;
 
     public constructor(toFile?: string | false, toConsole: boolean = true) {
-        this.outputToFile = toFile === undefined ? `/var/log/service.landscape/${this.namespace.toLowerCase()}.json` : toFile;
+        this.outputToFile = toFile === undefined ?
+            `/var/log/service.landscape/${this.namespace.toLowerCase()}.json` :
+            toFile;
 
         this.outputToConsole = toConsole;
     }
 
     public createLog<T>(t: Newable<T>): Logger {
-        let loggerName = `${this.namespace}.${t.name}`;
+        const loggerName = `${this.namespace}.${t.name}`;
 
         const logger = createLogger({
             name: loggerName,
             serializers: {
                 err: stdSerializers.err,
-                req: stdSerializers.req
+                req: stdSerializers.req,
             },
-            streams: this.getStreams()
+            streams: this.getStreams(),
         });
 
         logger.info(`Logger '${loggerName}' created with level: ${this.logLevel}!`);
@@ -38,22 +38,22 @@ export class LogFactory {
     }
 
     private getStreams(): Stream[] {
-        const streams: Stream[] = []
+        const streams: Stream[] = [];
 
         if (this.outputToConsole) {
             streams.push({
                 level: this.logLevel,
-                stream: process.stdout
+                stream: process.stdout,
             });
         }
 
         if (this.outputToFile) {
             streams.push({
-                type: "rotating-file",
+                count: 5,
                 level: this.logLevel,
                 path: this.outputToFile,
                 period: "1d",
-                count: 5
+                type: "rotating-file",
             });
         }
 
