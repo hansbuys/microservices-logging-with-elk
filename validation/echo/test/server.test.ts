@@ -1,4 +1,5 @@
 import {expect} from "chai";
+import { IncomingMessage } from "http";
 import {} from "mocha";
 import "reflect-metadata";
 import * as request from "request-promise-native";
@@ -26,5 +27,13 @@ describe("echo-validation", () => {
         const result = await request.get(url);
 
         expect(result).to.equal("hello");
+    });
+
+    it("should have request-id", async () => {
+        const result: IncomingMessage = await request.get(url, {
+            resolveWithFullResponse: true,
+        });
+
+        expect(result.rawHeaders).to.include("X-Request-Id");
     });
 });

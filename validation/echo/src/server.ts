@@ -1,14 +1,34 @@
 import { json } from "body-parser";
 import * as Logger from "bunyan";
-import { Application } from "express";
+import { Application, NextFunction, Request, RequestHandler, Response } from "express";
 import { Server } from "http";
 import { Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
+import { v1 as uuid } from "uuid";
 import { LogFactory } from "./logfactory";
 
 import "./echo";
 
 export class EchoServer {
+    private static addLogging(log: Logger): RequestHandler {
+        log.debug("Add logger to each request.");
+        return (req: Request, res: Response, next: NextFunction) => {
+            req.log = log;
+
+            next();
+        };
+    }
+
+    private static addRequestId(req: Request, res: Response, next: NextFunction) {
+        const requestId = uuid();
+        req.log = req.log.child({ requestId });
+
+        req.log.debug(`Add X-Request-Id as HTTP header.`);
+
+        res.header("X-Request-Id", requestId);
+
+        next();
+    }
 
     private readonly port: number;
     private readonly log: Logger;
@@ -28,6 +48,8 @@ export class EchoServer {
 
         server.setConfig((app: Application) => {
             app.use(json());
+            app.use(EchoServer.addLogging(this.log));
+            app.use(EchoServer.addRequestId);
         });
 
         this.serverInstance = server.build();
