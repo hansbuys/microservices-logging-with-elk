@@ -43,7 +43,7 @@ export class EchoServer {
         });
     }
 
-    public stop(): any {
+    public stop(): void {
         if (this.listener) {
             this.log.info("Server stopped.");
             this.listener.close();
