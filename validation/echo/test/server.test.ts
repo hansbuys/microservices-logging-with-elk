@@ -10,7 +10,7 @@ import { LogFactory } from "../src/logfactory";
 import { EchoServer } from "../src/server";
 
 @suite
-export class EchoServerTests {
+export class EchoValidationServerTests {
 
     private readonly port = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
     private readonly url = `http://localhost:${this.port}`;

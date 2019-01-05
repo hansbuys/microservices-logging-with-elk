@@ -2,7 +2,7 @@ import { Request } from "express";
 import { controller, httpGet } from "inversify-express-utils";
 
 @controller("/")
-export class EchoController {
+export class EchoValidationController {
 
     @httpGet("/")
     public async index(req: Request): Promise<string> {
