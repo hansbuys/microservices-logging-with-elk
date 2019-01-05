@@ -15,9 +15,8 @@ export class EchoServerTests {
     private readonly port = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
     private readonly url = `http://localhost:${this.port}`;
 
-    private readonly log = new LogFactory(false);
-
-    private readonly server: EchoServer = new EchoServer(this.port, this.log);
+    private readonly logFactory = new LogFactory(false);
+    private readonly server: EchoServer = new EchoServer(this.port, this.logFactory);
 
     public before(): void {
         this.server.start();

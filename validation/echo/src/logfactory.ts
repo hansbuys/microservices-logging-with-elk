@@ -10,14 +10,11 @@ export class LogFactory {
     private readonly logLevel = process.env.LOG_LEVEL as LogLevel || "debug";
     private readonly namespace: string = "Validation.Echo";
     private readonly outputToFile: string | false;
-    private readonly outputToConsole: boolean = true;
 
-    public constructor(toFile?: string | false, toConsole: boolean = true) {
+    public constructor(toFile?: string | false, private readonly outputToConsole: boolean = true) {
         this.outputToFile = toFile === undefined ?
             `/var/log/service.landscape/${this.namespace.toLowerCase()}.json` :
             toFile;
-
-        this.outputToConsole = toConsole;
     }
 
     public createLog<T>(t: Newable<T>): Logger {
