@@ -1,48 +1,53 @@
 import { expect } from "chai";
 import { IncomingMessage } from "http";
-import {} from "mocha";
+import { Done } from "mocha";
+import { suite, test} from "mocha-typescript";
+import "mocha-typescript";
 import "reflect-metadata";
 import * as request from "request-promise-native";
 import { StatusCodeError } from "request-promise-native/errors";
 import { LogFactory } from "../src/logfactory";
 import { EchoServer } from "../src/server";
 
-const port = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
-const url = `http://localhost:${port}`;
+@suite
+export class EchoServerTests {
 
-describe("echo-validation", () => {
+    private readonly port = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
+    private readonly url = `http://localhost:${this.port}`;
 
-    let server: EchoServer;
+    private readonly log = new LogFactory(false);
 
-    beforeEach(() => {
-        const log = new LogFactory(false);
-        server = new EchoServer(port, log);
-        server.start();
-    });
+    private readonly server: EchoServer = new EchoServer(this.port, this.log);
 
-    afterEach(() => {
-        server.stop();
-    });
+    public before(): void {
+        this.server.start();
+    }
 
-    it("should say hello", async () => {
-        const result = await request.get(url);
+    public after(): void {
+        this.server.stop();
+    }
 
+    @test("Says hello.")
+    public async saysHello(): Promise<void> {
+        const result = await request.get(this.url);
         expect(result).to.equal("hello");
-    });
+    }
 
-    it("should have request-id as a guid", async () => {
-        const result: IncomingMessage = await request.get(url, {
+    @test("Has a request Id header that is a GUID.")
+    public async hasRequestIdGuid(): Promise<void> {
+        const result: IncomingMessage = await request.get(this.url, {
             resolveWithFullResponse: true,
         });
 
         expect(result.headers["x-request-id"]).to.match(/^[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$/);
-    });
+    }
 
-    it("should have unique request-id", async () => {
-        const result1: IncomingMessage = await request.get(url, {
+    @test("Has a unique request Id header per request.")
+    public async shouldHaveUniqueRequestId(): Promise<void> {
+        const result1: IncomingMessage = await request.get(this.url, {
             resolveWithFullResponse: true,
         });
-        const result2: IncomingMessage = await request.get(url, {
+        const result2: IncomingMessage = await request.get(this.url, {
             resolveWithFullResponse: true,
         });
 
@@ -50,14 +55,15 @@ describe("echo-validation", () => {
         const header2 = result2.headers["x-request-id"];
 
         expect(header1).to.not.eql(header2);
-    });
+    }
 
-    it("should support returning 404", (done) => {
-        request.get(url + "/not-existing").then(() => {
+    @test("Supports 404.")
+    public supports404(done: Done): void {
+        request.get(this.url + "/not-existing").then(() => {
             done("failed");
         }).catch((err: StatusCodeError) => {
             expect(err.statusCode).to.eql(404);
             done();
         });
-    });
-});
+    }
+}
