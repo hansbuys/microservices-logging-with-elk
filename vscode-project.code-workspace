@@ -1,0 +1,47 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"eg2.tslint"
+		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Start with debug (validation/echo)",
+				"type": "node",
+				"request": "launch",
+				"program": "${workspaceRoot}/validation/echo/node_modules/.bin/ts-node",
+				"args": [
+					"${workspaceRoot}/validation/echo/src/index.ts"
+				],
+				"protocol": "inspector",
+				"cwd": "${workspaceFolder}/validation/echo"
+			},
+			{
+				"type": "node",
+				"request": "launch",
+				"name": "Debug tests (validation/echo)",
+				"program": "${workspaceFolder}/validation/echo/node_modules/mocha/bin/_mocha",
+				"args": [
+					"-r",
+					"ts-node/register",
+					"--timeout",
+					"999999",
+					"--colors",
+					"'test/**/*.ts'",
+				],
+				"console": "integratedTerminal",
+				"internalConsoleOptions": "neverOpen",
+				"protocol": "inspector",
+				"cwd": "${workspaceFolder}/validation/echo"
+			}
+		],
+		"compounds": []
+	}
+}
