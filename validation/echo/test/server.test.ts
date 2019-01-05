@@ -3,6 +3,7 @@ import { IncomingMessage } from "http";
 import {} from "mocha";
 import "reflect-metadata";
 import * as request from "request-promise-native";
+import { StatusCodeError } from "request-promise-native/errors";
 import { LogFactory } from "../src/logfactory";
 import { EchoServer } from "../src/server";
 
@@ -49,5 +50,14 @@ describe("echo-validation", () => {
         const header2 = result2.headers["x-request-id"];
 
         expect(header1).to.not.eql(header2);
+    });
+
+    it("should support returning 404", (done) => {
+        request.get(url + "/not-existing").then(() => {
+            done("failed");
+        }).catch((err: StatusCodeError) => {
+            expect(err.statusCode).to.eql(404);
+            done();
+        });
     });
 });
