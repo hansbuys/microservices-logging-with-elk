@@ -6,7 +6,7 @@ import * as request from "request-promise-native";
 import { LogFactory } from "../src/logfactory";
 import { EchoServer } from "../src/server";
 
-const port = 3000;
+const port = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
 const url = `http://localhost:${port}`;
 
 describe("echo-validation", () => {
