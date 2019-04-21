@@ -1,4 +1,4 @@
-version: '2'
+version: '3.3'
 
 services:
     intake:
@@ -7,10 +7,11 @@ services:
         environment:
             - LOG_LEVEL=debug
         working_dir: "/usr/src/app"
+        volumes:
+            - logs:/var/log/service.landscape/
         ports:
             - "8080:3000"
         command: npm run start
-        # command: npm run start:dev
 
     delivery:
         build: ./delivery
@@ -18,6 +19,50 @@ services:
         environment:
             - LOG_LEVEL=debug
         working_dir: "/usr/src/app"
+        volumes:
+            - logs:/var/log/service.landscape/
         ports:
             - "8081:3000"
         command: npm start
+
+    elasticsearch:
+        build: ./logging/elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+        networks:
+            - elk
+        volumes:
+            - elastic_data:/usr/share/elasticsearch/data
+    logstash:
+        build: ./logging/logstash
+        volumes:
+            - logs:/var/log/service.landscape/
+        ports:
+            - "5000:5000"
+        environment:
+            - LS_JAVA_OPTS=-Xmx256m -Xms256m
+            - LOG_LEVEL=warn
+        networks:
+            - elk
+        depends_on:
+            - elasticsearch
+    kibana:
+        build: ./logging/kibana
+        ports:
+            - "5601:5601"
+        networks:
+            - elk
+        depends_on:
+            - elasticsearch
+        environment: 
+            - LOGGING_QUIET=true
+volumes:
+    logs:
+    elastic_data:
+
+networks:
+    elk:
+        driver: bridge
