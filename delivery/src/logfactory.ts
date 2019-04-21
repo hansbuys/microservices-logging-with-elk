@@ -8,7 +8,7 @@ type Newable<T> = new (...args: any[]) => T;
 export class LogFactory {
 
     private readonly logLevel = process.env.LOG_LEVEL as LogLevel || "debug";
-    private readonly namespace: string = "Validation.Echo";
+    private readonly namespace: string = "ServiceLandscape.Delivery";
     private readonly outputToFile: string | false;
 
     public constructor(toFile?: string | false, private readonly outputToConsole: boolean = true) {

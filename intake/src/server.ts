@@ -8,9 +8,9 @@ import { v1 as uuid } from "uuid";
 import { LogFactory } from "./logfactory";
 import { addLogging, addRequestId } from "./middleware";
 
-import "./echo";
+import "./intake";
 
-export class EchoServer {
+export class IntakeServer {
 
     private readonly log: Logger;
     private readonly container: Container;
@@ -19,7 +19,7 @@ export class EchoServer {
     private listener?: Server;
 
     public constructor(private readonly port: number, logFactory: LogFactory) {
-        this.log = logFactory.createLog(EchoServer);
+        this.log = logFactory.createLog(IntakeServer);
 
         this.container = new Container();
         this.container.bind(LogFactory).toConstantValue(logFactory);
