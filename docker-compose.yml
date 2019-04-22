@@ -6,6 +6,8 @@ services:
         container_name: demo_intake
         environment:
             - LOG_LEVEL=debug
+            - DELIVERY_HOST=delivery
+            - DELIVERY_PORT=3000
         working_dir: "/usr/src/app"
         volumes:
             - logs:/var/log/service.landscape/
@@ -23,6 +25,21 @@ services:
             - logs:/var/log/service.landscape/
         ports:
             - "8081:3000"
+        command: npm start
+
+    sales:
+        build: ./sales
+        container_name: demo_sales
+        environment:
+            - LOG_LEVEL=debug
+            - INTAKE_HOST=intake
+            - INTAKE_PORT=3000
+        working_dir: "/usr/src/app"
+        volumes:
+            - logs:/var/log/service.landscape/
+        depends_on:
+            - intake
+            - delivery
         command: npm start
 
     elasticsearch:
